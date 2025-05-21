@@ -7,6 +7,6 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   integrations: [tailwind(), mdx()],
   site: 'https://daveragos.github.io',
-  base: '/flutter-talks',
+  base: '/flutter_talks',
   trailingSlash: 'always',
 });
