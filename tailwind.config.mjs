@@ -7,6 +7,9 @@ export default {
         'flutter-blue': '#02569B',
         'flutter-light-blue': '#027DFD',
       },
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
     },
   },
   plugins: [],
