@@ -1,0 +1,78 @@
+<div 
+  x-data="{
+    open: false,
+    title: '',
+    author: '',
+    event: '',
+    date: '',
+    tags: '',
+    videoUrl: '',
+    thumbnail: '',
+    description: '',
+    markdown: '',
+    showResult: false,
+    generateMarkdown() {
+      this.markdown = `---\ntitle: "${this.title.trim()}"\nevent: "${this.event.trim()}"\ndate: "${this.date.trim()}"\nyear: "${this.date.trim().slice(0,4)}"\ntags: [${this.tags.split(',').map(t => `\"${t.trim()}\"`).join(', ')}]\nthumbnail: "${this.thumbnail.trim()}"\nvideoUrl: "${this.videoUrl.trim()}"\n---\n\n${this.description.trim()}\n`;
+      this.showResult = true;
+    },
+    resetForm() {
+      this.title = this.author = this.event = this.date = this.tags = this.videoUrl = this.thumbnail = this.description = '';
+      this.markdown = '';
+      this.showResult = false;
+    }
+  }"
+  x-on:open-modal.window="open = true"
+  x-show="open"
+  style="display: none;"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+>
+  <div class="bg-blue-950 text-white rounded-2xl shadow-2xl w-full max-w-lg p-8 relative" @click.away="open = false; resetForm()">
+    <button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" @click="open = false; resetForm()">&times;</button>
+    <h2 class="text-2xl font-bold mb-6">Submit Your Flutter Talk</h2>
+    <form x-show="!showResult" @submit.prevent="generateMarkdown" class="space-y-4">
+      <div>
+        <label class="block mb-1 font-semibold">Talk Title</label>
+        <input x-model="title" type="text" required class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="e.g. Building Beautiful Flutter Apps" />
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Speaker/Author</label>
+        <input x-model="author" type="text" class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="e.g. Jane Doe" />
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Event</label>
+        <input x-model="event" type="text" required class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="e.g. FlutterCon USA 2024" />
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Date</label>
+        <input x-model="date" type="date" required class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" />
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Tags (comma separated)</label>
+        <input x-model="tags" type="text" required class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="e.g. UI, Design, Flutter" />
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Video URL</label>
+        <input x-model="videoUrl" type="url" required class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="https://youtube.com/watch?v=..." />
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Thumbnail URL</label>
+        <input x-model="thumbnail" type="url" class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="/images/talks/your-thumbnail.jpg or https://..." />
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Description</label>
+        <textarea x-model="description" required rows="3" class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="Brief description of the talk (2-3 sentences)"></textarea>
+      </div>
+      <button type="submit" class="w-full mt-4 py-2 rounded bg-gradient-to-r from-purple-500 to-blue-500 font-bold text-lg shadow hover:from-purple-600 hover:to-blue-600 transition">Generate Markdown</button>
+    </form>
+    <div x-show="showResult" x-transition class="mt-6">
+      <h3 class="text-lg font-semibold mb-2">Your Markdown Entry</h3>
+      <textarea readonly x-model="markdown" class="w-full h-48 rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white mb-4"></textarea>
+      <div class="flex gap-2">
+        <button @click="navigator.clipboard.writeText(markdown)" class="flex-1 py-2 rounded bg-purple-600 hover:bg-purple-700 font-bold">Copy</button>
+        <a :href="'data:text/markdown;charset=utf-8,' + encodeURIComponent(markdown)" download="talk.md" class="flex-1 py-2 rounded bg-blue-600 hover:bg-blue-700 font-bold text-center">Download</a>
+      </div>
+      <p class="text-xs text-blue-200 mt-4">Add your thumbnail image to <code>public/images/talks/</code> and submit a Pull Request with this markdown file in <code>src/content/talks/</code>.</p>
+      <button @click="open = false; resetForm()" class="w-full mt-4 py-2 rounded bg-gray-700 hover:bg-gray-800 font-bold">Close</button>
+    </div>
+  </div>
+</div> 

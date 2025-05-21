@@ -38,5 +38,14 @@ const { title, description = "A curated collection of Flutter talks from around 
         <p class="text-center text-gray-500">Built with ❤️ by the Flutter community</p>
       </div>
     </footer>
+    <button 
+      x-data 
+      @click="$dispatch('open-modal')" 
+      class="fixed bottom-6 right-6 z-50 bg-purple-700 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-800 transition"
+    >
+      Submit Talk
+    </button>
+    <import src="../components/SubmitTalkModal.astro" />
+    <SubmitTalkModal />
   </body>
 </html> 
