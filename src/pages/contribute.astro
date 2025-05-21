@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Contribute - Flutter Talks Collection">
+  <div class="max-w-3xl mx-auto space-y-8">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Contribute a Talk</h1>
+      <p class="text-xl text-gray-600">
+        Share your favorite Flutter talks with the community
+      </p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">How to Submit</h2>
+        <ol class="list-decimal list-inside space-y-3 text-gray-600">
+          <li>Fork this repository</li>
+          <li>Create a new markdown file in <code class="bg-gray-100 px-2 py-1 rounded">src/content/talks/</code></li>
+          <li>Add the talk thumbnail to <code class="bg-gray-100 px-2 py-1 rounded">public/images/talks/</code></li>
+          <li>Submit a Pull Request with your changes</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Talk Entry Template</h2>
+        <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto">
+---
+title: "Your Talk Title"
+event: "Event Name (e.g., FlutterCon USA 2024)"
+date: "YYYY-MM-DD"
+year: "YYYY"
+tags: ["tag1", "tag2", "tag3"]
+thumbnail: "/images/talks/your-thumbnail.jpg"
+videoUrl: "https://youtube.com/watch?v=..."
+---
+
+Brief description of the talk (2-3 sentences)
+        </pre>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Requirements</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-600">
+          <li>Clear and descriptive title</li>
+          <li>Event name and date</li>
+          <li>Relevant tags (2-5 tags recommended)</li>
+          <li>High-quality thumbnail image</li>
+          <li>Valid video URL</li>
+          <li>Brief description of the talk</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Tips for Great Submissions</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-600">
+          <li>Use clear, descriptive titles</li>
+          <li>Include relevant tags for better discoverability</li>
+          <li>Provide a concise but informative description</li>
+          <li>Ensure the video is publicly accessible</li>
+          <li>Use high-quality thumbnail images</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</Layout> 

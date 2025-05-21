@@ -1,16 +1,57 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import { format } from 'date-fns';
 
+// This would be replaced with actual data fetching from the content collection
+const talks = [
+  {
+    title: "Building Beautiful Flutter Apps",
+    event: "FlutterCon USA 2024",
+    date: "2024-03-15",
+    year: "2024",
+    tags: ["UI", "Design", "Flutter"],
+    thumbnail: "/images/talks/placeholder.jpg",
+    videoUrl: "https://youtube.com/watch?v=example",
+    description: "Learn how to create stunning Flutter applications with modern design principles."
+  }
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Flutter Talks Collection">
+  <div class="space-y-8">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Flutter Talks Collection</h1>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Discover and share the best Flutter talks from conferences, meetups, and events around the world.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {talks.map((talk) => (
+        <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+          <a href={talk.videoUrl} target="_blank" rel="noopener noreferrer" class="block">
+            <img
+              src={talk.thumbnail}
+              alt={talk.title}
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-4">
+              <h2 class="text-xl font-semibold text-gray-900 mb-2">{talk.title}</h2>
+              <p class="text-sm text-gray-600 mb-2">{talk.event}</p>
+              <p class="text-sm text-gray-500 mb-3">
+                {format(new Date(talk.date), 'MMMM d, yyyy')}
+              </p>
+              <div class="flex flex-wrap gap-2">
+                {talk.tags.map((tag) => (
+                  <span class="px-2 py-1 bg-flutter-light-blue bg-opacity-10 text-flutter-blue text-xs rounded-full">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>

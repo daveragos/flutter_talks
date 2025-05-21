@@ -1,0 +1,42 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "A curated collection of Flutter talks from around the world" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="min-h-screen bg-gray-50">
+    <header class="bg-white shadow-sm">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex justify-between items-center">
+          <a href="/" class="text-2xl font-bold text-flutter-blue">Flutter Talks</a>
+          <div class="space-x-4">
+            <a href="/" class="text-gray-600 hover:text-flutter-blue">Home</a>
+            <a href="/contribute" class="text-gray-600 hover:text-flutter-blue">Contribute</a>
+            <a href="https://github.com/yourusername/flutter-talks" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-flutter-blue">GitHub</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <slot />
+    </main>
+    <footer class="bg-white border-t mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <p class="text-center text-gray-500">Built with ❤️ by the Flutter community</p>
+      </div>
+    </footer>
+  </body>
+</html> 
