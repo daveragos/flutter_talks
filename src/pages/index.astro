@@ -1,23 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { format } from 'date-fns';
+import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
 const baseUrl = import.meta.env.BASE_URL;
 
-// This would be replaced with actual data fetching from the content collection
-const talks = [
-  {
-    title: "Building Beautiful Flutter Apps",
-    event: "FlutterCon USA 2024",
-    date: "2024-03-15",
-    year: "2024",
-    tags: ["UI", "Design", "Flutter"],
-    thumbnail: "/images/talks/placeholder.jpg",
-    videoUrl: "https://youtube.com/watch?v=example",
-    description: "Learn how to create stunning Flutter applications with modern design principles."
-  }
-];
+// Fetch all talks from the content collection
+const allTalks = await getCollection('talks');
+
+// Sort talks by date (newest first) and get the description from the content body
+const talks = allTalks
+  .map(talk => ({
+    ...talk.data,
+    description: talk.body || '',
+    slug: talk.id,
+  }))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 ---
 
 <Layout title="Flutter Talks Collection">
@@ -51,10 +50,10 @@ const talks = [
               <p class="text-xs text-gray-500 mb-2">{format(new Date(talk.date), 'MMMM d, yyyy')}</p>
               <div class="flex flex-wrap gap-2 mb-2">
                 {talk.tags.map((tag) => (
-                  <span class="px-2 py-0.5 bg-purple-700 text-white text-xs rounded-full font-semibold">{tag}</span>
+                  <span key={tag} class="px-2 py-0.5 bg-purple-700 text-white text-xs rounded-full font-semibold">{tag}</span>
                 ))}
               </div>
-              <p class="text-xs text-gray-700">{talk.description}</p>
+              <p class="text-xs text-gray-700">{talk.description?.replace(/\n/g, ' ').substring(0, 150)}...</p>
             </div>
           </a>
         </article>
