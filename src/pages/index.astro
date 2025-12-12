@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import TalkFilter from '../components/TalkFilter.astro';
 import { format } from 'date-fns';
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
@@ -16,6 +17,10 @@ const talks = allTalks
     slug: talk.id,
   }))
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+// Serialize talks for client-side use
+const talksJson = JSON.stringify(talks);
+const baseUrlJson = JSON.stringify(baseUrl);
 ---
 
 <Layout title="Flutter Talks Collection">
@@ -34,29 +39,60 @@ const talks = allTalks
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {talks.map((talk) => (
+    <TalkFilter talks={talks} />
+
+    <div 
+      x-data={`{
+        talks: ${talksJson},
+        filteredTalks: ${talksJson},
+        baseUrl: ${baseUrlJson},
+        formatDate(dateString) {
+          const date = new Date(dateString);
+          return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        },
+        getThumbnail(thumbnail) {
+          return thumbnail || this.baseUrl + 'images/flutter-talks-logo.png';
+        },
+        init() {
+          // Listen for filter updates
+          window.addEventListener('talks-filtered', (e) => {
+            this.filteredTalks = e.detail.talks;
+          });
+        }
+      }`}
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
+      <template x-for="talk in filteredTalks" :key="talk.slug">
         <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-transform duration-200">
-          <a href={talk.videoUrl} target="_blank" rel="noopener noreferrer" class="block">
+          <a :href="talk.videoUrl" target="_blank" rel="noopener noreferrer" class="block">
             <img
-              src={talk.thumbnail || `${baseUrl}images/flutter-talks-logo.png`}
-              alt={talk.title}
+              :src="getThumbnail(talk.thumbnail)"
+              :alt="talk.title"
               class="w-full aspect-video object-cover bg-gray-200"
-              onerror={`this.onerror=null; this.src='${baseUrl}images/flutter-talks-logo.png';`}
+              :onerror="'this.onerror=null; this.src=\'' + baseUrl + 'images/flutter-talks-logo.png\';'"
             />
             <div class="p-4">
-              <h2 class="text-lg font-bold text-purple-900 mb-1">{talk.title}</h2>
-              <p class="text-xs text-blue-700 mb-1">{talk.event}</p>
-              <p class="text-xs text-gray-500 mb-2">{format(new Date(talk.date), 'MMMM d, yyyy')}</p>
+              <h2 class="text-lg font-bold text-purple-900 mb-1" x-text="talk.title"></h2>
+              <p class="text-xs text-blue-700 mb-1" x-text="talk.event"></p>
+              <p class="text-xs text-gray-500 mb-2" x-text="formatDate(talk.date)"></p>
               <div class="flex flex-wrap gap-2">
-                {(talk.tags as string[]).map((tag) => (
-                  <span class="px-2 py-0.5 bg-purple-700 text-white text-xs rounded-full font-semibold">{tag}</span>
-                ))}
+                <template x-for="tag in talk.tags" :key="tag">
+                  <span class="px-2 py-0.5 bg-purple-700 text-white text-xs rounded-full font-semibold" x-text="tag"></span>
+                </template>
               </div>
             </div>
           </a>
         </article>
-      ))}
+      </template>
+      
+      <!-- Empty State -->
+      <div 
+        x-show="filteredTalks.length === 0"
+        class="col-span-full text-center py-12"
+      >
+        <p class="text-white text-xl mb-2">No talks found</p>
+        <p class="text-blue-200">Try adjusting your filters</p>
+      </div>
     </div>
   </div>
 </Layout>
