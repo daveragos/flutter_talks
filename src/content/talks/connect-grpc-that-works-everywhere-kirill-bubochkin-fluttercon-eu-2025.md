@@ -1,5 +1,5 @@
 ---
-title: "Connect: gRPC that \\"works everywhere\\" - Kirill Bubochkin | Fluttercon EU 2025"
+title: "Connect: gRPC that \"works everywhere\" - Kirill Bubochkin | Fluttercon EU 2025"
 event: "Fluttercon EU 2025"
 date: "2025-12-12"
 year: "2025"

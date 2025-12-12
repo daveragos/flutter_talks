@@ -1,5 +1,5 @@
 ---
-title: "Why \\"Where\\" Matters: Exploring the Power of Location-Aware Apps - Jen Merritt | Fluttercon EU 2025"
+title: "Why \"Where\" Matters: Exploring the Power of Location-Aware Apps - Jen Merritt | Fluttercon EU 2025"
 event: "Fluttercon EU 2025"
 date: "2025-12-12"
 year: "2025"

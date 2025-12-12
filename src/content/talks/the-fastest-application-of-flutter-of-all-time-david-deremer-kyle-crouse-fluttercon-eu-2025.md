@@ -1,5 +1,5 @@
 ---
-title: "The \\"fastest\\" application of Flutter of all time! - David DeRemer, Kyle Crouse | Fluttercon EU 2025"
+title: "The \"fastest\" application of Flutter of all time! - David DeRemer, Kyle Crouse | Fluttercon EU 2025"
 event: "Fluttercon EU 2025"
 date: "2025-12-12"
 year: "2025"

@@ -1,5 +1,5 @@
 ---
-title: "Learning something about Dart performance by optimizing jsonDecode - Vyacheslav \\"Slava\\" Egorov"
+title: "Learning something about Dart performance by optimizing jsonDecode - Vyacheslav \"Slava\" Egorov"
 event: "Flutter Conference"
 date: "2025-12-12"
 year: "2025"
