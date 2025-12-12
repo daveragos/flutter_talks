@@ -21,7 +21,7 @@ const baseUrl = import.meta.env.BASE_URL;
     <meta name="description" content={description} />
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
-  <body class="min-h-screen bg-gradient-to-b from-purple-800 via-blue-800 to-blue-900 font-sans">
+  <body class="min-h-screen bg-gradient-to-b from-purple-800 via-blue-800 to-blue-900 font-sans flex flex-col">
     <header class="sticky top-0 z-50 bg-white shadow-sm">
       <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex justify-between items-center">
@@ -40,10 +40,10 @@ const baseUrl = import.meta.env.BASE_URL;
         </div>
       </nav>
     </header>
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       <slot />
     </main>
-    <footer class="bg-blue-950 text-blue-100 py-6 mt-12">
+    <footer class="bg-blue-950 text-blue-100 py-6 mt-auto">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
         © {new Date().getFullYear()} Flutter Talks. Made with ❤️ by <a href="https://github.com/daveragos" target="_blank" rel="noopener noreferrer" class="text-blue-300 hover:text-white underline">RaGoose</a>
       </div>

@@ -10,6 +10,7 @@ const talksCollection = defineCollection({
     tags: z.array(z.string()),
     thumbnail: z.string(),
     videoUrl: z.string(),
+    videoLength: z.number().optional(), // Length in minutes
   }),
 });
 

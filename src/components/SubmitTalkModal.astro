@@ -16,7 +16,7 @@ const xDataContent = `{
     tags: '',
     videoUrl: '',
     thumbnail: '',
-    description: '',
+    videoLength: '',
     markdown: '',
     prUrl: '',
     filename: '',
@@ -30,19 +30,23 @@ const xDataContent = `{
       const cleanTags = this.tags.split(',').map(t => t.trim()).filter(t => t);
       const cleanVideoUrl = this.videoUrl.trim();
       const cleanThumbnail = this.thumbnail.trim() || '/images/talks/placeholder.jpg';
-      const cleanDescription = this.description.trim();
+      const videoLength = parseInt(this.videoLength.trim()) || null;
       const year = cleanDate.slice(0, 4);
       
-      const frontMatter = '---\\n' +
+      let frontMatter = '---\\n' +
         'title: "' + cleanTitle.replace(/"/g, '\\\\"') + '"\\n' +
         'event: "' + cleanEvent.replace(/"/g, '\\\\"') + '"\\n' +
         'date: "' + cleanDate + '"\\n' +
         'year: "' + year + '"\\n' +
         'tags: [' + cleanTags.map(t => '"' + t.replace(/"/g, '\\\\"') + '"').join(', ') + ']\\n' +
         'thumbnail: "' + cleanThumbnail.replace(/"/g, '\\\\"') + '"\\n' +
-        'videoUrl: "' + cleanVideoUrl.replace(/"/g, '\\\\"') + '"\\n' +
-        '---\\n\\n' +
-        cleanDescription.replace(/\\n/g, '\\\\n') + '\\n';
+        'videoUrl: "' + cleanVideoUrl.replace(/"/g, '\\\\"') + '"\\n';
+      
+      if (videoLength) {
+        frontMatter += 'videoLength: ' + videoLength + '\\n';
+      }
+      
+      frontMatter += '---\\n';
       
       this.markdown = frontMatter;
       
@@ -62,7 +66,7 @@ const xDataContent = `{
       window.open(this.prUrl, '_blank');
     },
     resetForm() {
-      this.title = this.author = this.event = this.date = this.tags = this.videoUrl = this.thumbnail = this.description = '';
+      this.title = this.author = this.event = this.date = this.tags = this.videoUrl = this.thumbnail = this.videoLength = '';
       this.markdown = '';
       this.prUrl = '';
       this.filename = '';
@@ -114,8 +118,8 @@ const xDataContent = `{
         <input x-model="thumbnail" type="url" class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="/images/talks/your-thumbnail.jpg or https://..." />
       </div>
       <div>
-        <label class="block mb-1 font-semibold">Description</label>
-        <textarea x-model="description" required rows="3" class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="Brief description of the talk (2-3 sentences)"></textarea>
+        <label class="block mb-1 font-semibold">Video Length (minutes)</label>
+        <input x-model="videoLength" type="number" min="1" class="w-full rounded bg-blue-900/40 border border-blue-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="e.g. 30" />
       </div>
       <button type="submit" class="w-full mt-4 py-2 rounded bg-gradient-to-r from-purple-500 to-blue-500 font-bold text-lg shadow hover:from-purple-600 hover:to-blue-600 transition">Submit & Create Pull Request</button>
     </form>

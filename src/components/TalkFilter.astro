@@ -9,6 +9,7 @@ interface Props {
     thumbnail: string;
     videoUrl: string;
     slug: string;
+    videoLength?: number;
   }>;
 }
 
@@ -37,6 +38,7 @@ const tagsJson = JSON.stringify(uniqueTags);
     selectedYear: '',
     selectedEvent: '',
     selectedTags: [],
+    selectedLengthRange: '',
     searchQuery: '',
     showFilters: false,
     filterTalks() {
@@ -57,6 +59,28 @@ const tagsJson = JSON.stringify(uniqueTags);
           if (!hasMatchingTag) {
             return false;
           }
+        }
+        
+        // Filter by video length
+        if (this.selectedLengthRange && talk.videoLength !== undefined) {
+          const length = talk.videoLength;
+          switch(this.selectedLengthRange) {
+            case 'short':
+              if (length >= 15) return false;
+              break;
+            case 'medium':
+              if (length < 15 || length >= 30) return false;
+              break;
+            case 'long':
+              if (length < 30 || length >= 60) return false;
+              break;
+            case 'very-long':
+              if (length < 60) return false;
+              break;
+          }
+        } else if (this.selectedLengthRange && !talk.videoLength) {
+          // If length filter is selected but talk has no length, exclude it
+          return false;
         }
         
         // Filter by search query (title)
@@ -88,6 +112,7 @@ const tagsJson = JSON.stringify(uniqueTags);
       this.selectedYear = '';
       this.selectedEvent = '';
       this.selectedTags = [];
+      this.selectedLengthRange = '';
       this.searchQuery = '';
       this.filterTalks();
     },
@@ -96,6 +121,7 @@ const tagsJson = JSON.stringify(uniqueTags);
       if (this.selectedYear) count++;
       if (this.selectedEvent) count++;
       if (this.selectedTags.length > 0) count++;
+      if (this.selectedLengthRange) count++;
       if (this.searchQuery) count++;
       return count;
     },
@@ -176,6 +202,22 @@ const tagsJson = JSON.stringify(uniqueTags);
           </template>
         </select>
       </div>
+    </div>
+
+    <!-- Video Length Filter -->
+    <div>
+      <label class="block text-white font-semibold mb-2">Video Length</label>
+      <select
+        x-model="selectedLengthRange"
+        @change="filterTalks()"
+        class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+      >
+        <option value="">All Lengths</option>
+        <option value="short">Short (&lt; 15 min)</option>
+        <option value="medium">Medium (15-30 min)</option>
+        <option value="long">Long (30-60 min)</option>
+        <option value="very-long">Very Long (60+ min)</option>
+      </select>
     </div>
 
     <!-- Tags Filter -->
