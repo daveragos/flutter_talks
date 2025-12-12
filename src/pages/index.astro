@@ -9,11 +9,10 @@ const baseUrl = import.meta.env.BASE_URL;
 // Fetch all talks from the content collection
 const allTalks = await getCollection('talks');
 
-// Sort talks by date (newest first) and get the description from the content body
+// Sort talks by date (newest first)
 const talks = allTalks
   .map(talk => ({
     ...talk.data,
-    description: talk.body || '',
     slug: talk.id,
   }))
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -40,20 +39,20 @@ const talks = allTalks
         <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-transform duration-200">
           <a href={talk.videoUrl} target="_blank" rel="noopener noreferrer" class="block">
             <img
-              src={talk.thumbnail}
+              src={talk.thumbnail || `${baseUrl}images/flutter-talks-logo.png`}
               alt={talk.title}
               class="w-full aspect-video object-cover bg-gray-200"
+              onerror={`this.onerror=null; this.src='${baseUrl}images/flutter-talks-logo.png';`}
             />
             <div class="p-4">
               <h2 class="text-lg font-bold text-purple-900 mb-1">{talk.title}</h2>
               <p class="text-xs text-blue-700 mb-1">{talk.event}</p>
               <p class="text-xs text-gray-500 mb-2">{format(new Date(talk.date), 'MMMM d, yyyy')}</p>
-              <div class="flex flex-wrap gap-2 mb-2">
-                {talk.tags.map((tag) => (
+              <div class="flex flex-wrap gap-2">
+                {(talk.tags as string[]).map((tag) => (
                   <span class="px-2 py-0.5 bg-purple-700 text-white text-xs rounded-full font-semibold">{tag}</span>
                 ))}
               </div>
-              <p class="text-xs text-gray-700">{talk.description?.replace(/\n/g, ' ').substring(0, 150)}...</p>
             </div>
           </a>
         </article>
