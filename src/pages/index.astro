@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import { format } from 'date-fns';
 import '../styles/global.css';
 
+const baseUrl = import.meta.env.BASE_URL;
+
 // This would be replaced with actual data fetching from the content collection
 const talks = [
   {
@@ -23,12 +25,20 @@ const talks = [
     <div class="text-center py-10">
       <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2 drop-shadow">The Best Flutter Talks of 2024 ✨</h1>
       <p class="text-lg md:text-xl text-blue-100 mb-6">Discover, share, and celebrate the best Flutter talks from around the world.</p>
-      <a href="/contribute" class="inline-block px-6 py-2 bg-white text-purple-800 font-bold rounded-full shadow hover:bg-blue-100 transition">Submit a Talk</a>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <button 
+          onclick="window.dispatchEvent(new CustomEvent('open-modal'))"
+          class="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-full shadow-lg hover:from-purple-700 hover:to-blue-700 transition"
+        >
+          🚀 Submit a Talk
+        </button>
+        <a href={`${baseUrl}contribute/`} class="inline-block px-6 py-3 bg-white text-purple-800 font-bold rounded-full shadow hover:bg-blue-100 transition">Learn How to Contribute</a>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {talks.map((talk) => (
-        <article class="bg-white/90 rounded-2xl shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-transform duration-200 border border-white/20">
+        <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-transform duration-200">
           <a href={talk.videoUrl} target="_blank" rel="noopener noreferrer" class="block">
             <img
               src={talk.thumbnail}
@@ -41,7 +51,7 @@ const talks = [
               <p class="text-xs text-gray-500 mb-2">{format(new Date(talk.date), 'MMMM d, yyyy')}</p>
               <div class="flex flex-wrap gap-2 mb-2">
                 {talk.tags.map((tag) => (
-                  <span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full font-semibold">{tag}</span>
+                  <span class="px-2 py-0.5 bg-purple-700 text-white text-xs rounded-full font-semibold">{tag}</span>
                 ))}
               </div>
               <p class="text-xs text-gray-700">{talk.description}</p>
@@ -51,9 +61,4 @@ const talks = [
       ))}
     </div>
   </div>
-  <footer class="bg-blue-950 text-blue-100 py-6 mt-12">
-    <div class="max-w-7xl mx-auto text-center text-sm">
-      © {new Date().getFullYear()} Flutter Talks. Made with ❤️ by the Flutter community.
-    </div>
-  </footer>
 </Layout>

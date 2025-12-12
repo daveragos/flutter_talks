@@ -5,28 +5,33 @@ import '../styles/global.css';
 
 <Layout title="Contribute - Flutter Talks Collection">
   <div class="max-w-3xl mx-auto space-y-8">
-    <div class="text-center">
-      <h1 class="text-4xl font-bold text-gray-900 mb-4">Contribute a Talk</h1>
-      <p class="text-xl text-gray-600">
+    <div class="text-center py-8">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 drop-shadow">Contribute a Talk</h1>
+      <p class="text-lg md:text-xl text-blue-100 mb-6">
         Share your favorite Flutter talks with the community
       </p>
+      <button 
+        onclick="window.dispatchEvent(new CustomEvent('open-modal'))"
+        class="inline-block px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-full shadow-lg hover:from-purple-700 hover:to-blue-700 transition text-lg"
+      >
+        🚀 Submit Your Talk
+      </button>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+    <div class="bg-white rounded-2xl shadow-lg p-8 space-y-6">
       <section>
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">How to Submit</h2>
         <ol class="list-decimal list-inside space-y-3 text-gray-600">
           <li>Fork this repository</li>
-          <li>Create a new markdown file in <code class="bg-gray-100 px-2 py-1 rounded">src/content/talks/</code></li>
-          <li>Add the talk thumbnail to <code class="bg-gray-100 px-2 py-1 rounded">public/images/talks/</code></li>
+          <li>Create a new markdown file in <code class="bg-gray-100 px-2 py-1 rounded text-sm">src/content/talks/</code></li>
+          <li>Add the talk thumbnail to <code class="bg-gray-100 px-2 py-1 rounded text-sm">public/images/talks/</code></li>
           <li>Submit a Pull Request with your changes</li>
         </ol>
       </section>
 
       <section>
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">Talk Entry Template</h2>
-        <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto">
----
+        <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto text-gray-600 text-sm"><code>---
 title: "Your Talk Title"
 event: "Event Name (e.g., FlutterCon USA 2024)"
 date: "YYYY-MM-DD"
@@ -36,8 +41,7 @@ thumbnail: "/images/talks/your-thumbnail.jpg"
 videoUrl: "https://youtube.com/watch?v=..."
 ---
 
-Brief description of the talk (2-3 sentences)
-        </pre>
+Brief description of the talk (2-3 sentences)</code></pre>
       </section>
 
       <section>

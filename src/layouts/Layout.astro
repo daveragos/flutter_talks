@@ -1,10 +1,13 @@
 ---
+import SubmitTalkModal from '../components/SubmitTalkModal.astro';
+
 interface Props {
   title: string;
   description?: string;
 }
 
 const { title, description = "A curated collection of Flutter talks from around the world" } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <!DOCTYPE html>
@@ -12,20 +15,21 @@ const { title, description = "A curated collection of Flutter talks from around 
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon.svg`} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
   <body class="min-h-screen bg-gradient-to-b from-purple-800 via-blue-800 to-blue-900 font-sans">
     <header class="bg-white shadow-sm">
       <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex justify-between items-center">
-          <a href="/" class="text-2xl font-bold text-flutter-blue">Flutter Talks</a>
+          <a href={baseUrl} class="text-2xl font-bold text-flutter-blue">Flutter Talks</a>
           <div class="space-x-4">
-            <a href="/" class="text-gray-600 hover:text-flutter-blue">Home</a>
-            <a href="/contribute" class="text-gray-600 hover:text-flutter-blue">Contribute</a>
-            <a href="https://github.com/yourusername/flutter-talks" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-flutter-blue">GitHub</a>
+            <a href={baseUrl} class="text-gray-600 hover:text-flutter-blue">Home</a>
+            <a href={`${baseUrl}contribute/`} class="text-gray-600 hover:text-flutter-blue">Contribute</a>
+            <a href="https://github.com/daveragos/flutter_talks" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-flutter-blue">GitHub</a>
           </div>
         </div>
       </nav>
@@ -33,19 +37,11 @@ const { title, description = "A curated collection of Flutter talks from around 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <slot />
     </main>
-    <footer class="bg-white border-t mt-12">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <p class="text-center text-gray-500">Built with ❤️ by the Flutter community</p>
+    <footer class="bg-blue-950 text-blue-100 py-6 mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+        © {new Date().getFullYear()} Flutter Talks. Made with ❤️ by the Flutter community.
       </div>
     </footer>
-    <button 
-      x-data 
-      @click="$dispatch('open-modal')" 
-      class="fixed bottom-6 right-6 z-50 bg-purple-700 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-800 transition"
-    >
-      Submit Talk
-    </button>
-    <import src="../components/SubmitTalkModal.astro" />
-    <SubmitTalkModal />
+    <SubmitTalkModal githubRepo="daveragos/flutter_talks" githubBranch="main" />
   </body>
 </html> 
