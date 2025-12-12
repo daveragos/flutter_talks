@@ -22,8 +22,8 @@ const talks = allTalks
 <Layout title="Flutter Talks Collection">
   <div class="space-y-8">
     <div class="text-center py-10">
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2 drop-shadow">The Best Flutter Talks of 2024 ✨</h1>
-      <p class="text-lg md:text-xl text-blue-100 mb-6">Discover, share, and celebrate the best Flutter talks from around the world.</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2 drop-shadow">Flutter Talks Collection ✨</h1>
+      <p class="text-lg md:text-xl text-blue-100 mb-6">Discover, share, and explore Flutter talks from conferences and events around the world.</p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <button 
           onclick="window.dispatchEvent(new CustomEvent('open-modal'))"
@@ -50,7 +50,7 @@ const talks = allTalks
               <p class="text-xs text-gray-500 mb-2">{format(new Date(talk.date), 'MMMM d, yyyy')}</p>
               <div class="flex flex-wrap gap-2 mb-2">
                 {talk.tags.map((tag) => (
-                  <span key={tag} class="px-2 py-0.5 bg-purple-700 text-white text-xs rounded-full font-semibold">{tag}</span>
+                  <span class="px-2 py-0.5 bg-purple-700 text-white text-xs rounded-full font-semibold">{tag}</span>
                 ))}
               </div>
               <p class="text-xs text-gray-700">{talk.description?.replace(/\n/g, ' ').substring(0, 150)}...</p>
