@@ -1,8 +1,8 @@
 ---
 title: "Trash talk: WHENs and HOWs of Dart VM’s GC | Anna Leushchenko - FlutterVikings"
-event: "Anna Leushchenko - FlutterVikings"
-date: "2025-12-12"
-year: "2025"
+event: "Flutter Vikings"
+date: "2022-02-02"
+year: "2022"
 tags: ["dart", "flutter"]
 thumbnail: "https://i.ytimg.com/vi_webp/3gp2H7h0qO4/maxresdefault.webp"
 videoUrl: "https://www.youtube.com/watch?v=3gp2H7h0qO4"

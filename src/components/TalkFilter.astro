@@ -28,7 +28,7 @@ const eventsJson = JSON.stringify(uniqueEvents);
 const tagsJson = JSON.stringify(uniqueTags);
 ---
 
-<div 
+<div
   x-data={`{
     talks: ${talksJson},
     filteredTalks: ${talksJson},
@@ -43,69 +43,35 @@ const tagsJson = JSON.stringify(uniqueTags);
     showFilters: false,
     filterTalks() {
       this.filteredTalks = this.talks.filter(talk => {
-        // Filter by year
-        if (this.selectedYear && talk.year !== this.selectedYear) {
-          return false;
-        }
-        
-        // Filter by event
-        if (this.selectedEvent && talk.event !== this.selectedEvent) {
-          return false;
-        }
-        
-        // Filter by tags (at least one selected tag must match)
+        if (this.selectedYear && talk.year !== this.selectedYear) return false;
+        if (this.selectedEvent && talk.event !== this.selectedEvent) return false;
         if (this.selectedTags.length > 0) {
           const hasMatchingTag = this.selectedTags.some(tag => talk.tags.includes(tag));
-          if (!hasMatchingTag) {
-            return false;
-          }
+          if (!hasMatchingTag) return false;
         }
-        
-        // Filter by video length
         if (this.selectedLengthRange && talk.videoLength !== undefined) {
           const length = talk.videoLength;
           switch(this.selectedLengthRange) {
-            case 'short':
-              if (length >= 15) return false;
-              break;
-            case 'medium':
-              if (length < 15 || length >= 30) return false;
-              break;
-            case 'long':
-              if (length < 30 || length >= 60) return false;
-              break;
-            case 'very-long':
-              if (length < 60) return false;
-              break;
+            case 'short': if (length >= 15) return false; break;
+            case 'medium': if (length < 15 || length >= 30) return false; break;
+            case 'long': if (length < 30 || length >= 60) return false; break;
+            case 'very-long': if (length < 60) return false; break;
           }
-        } else if (this.selectedLengthRange && !talk.videoLength) {
-          // If length filter is selected but talk has no length, exclude it
-          return false;
-        }
-        
-        // Filter by search query (title)
+        } else if (this.selectedLengthRange && !talk.videoLength) return false;
         if (this.searchQuery) {
           const query = this.searchQuery.toLowerCase();
-          if (!talk.title.toLowerCase().includes(query)) {
-            return false;
-          }
+          if (!talk.title.toLowerCase().includes(query)) return false;
         }
-        
         return true;
       });
-      
-      // Dispatch event to update the talks display
-      window.dispatchEvent(new CustomEvent('talks-filtered', { 
-        detail: { talks: this.filteredTalks } 
+      window.dispatchEvent(new CustomEvent('talks-filtered', {
+        detail: { talks: this.filteredTalks }
       }));
     },
     toggleTag(tag) {
       const index = this.selectedTags.indexOf(tag);
-      if (index > -1) {
-        this.selectedTags.splice(index, 1);
-      } else {
-        this.selectedTags.push(tag);
-      }
+      if (index > -1) this.selectedTags.splice(index, 1);
+      else this.selectedTags.push(tag);
       this.filterTalks();
     },
     clearFilters() {
@@ -126,124 +92,144 @@ const tagsJson = JSON.stringify(uniqueTags);
       return count;
     },
     getTagClass(tag) {
-      return this.selectedTags.includes(tag) 
-        ? 'bg-purple-600 text-white border-purple-400' 
-        : 'bg-white/20 text-white border-white/30 hover:bg-white/30';
+      return this.selectedTags.includes(tag)
+        ? 'bg-primary text-primary-foreground border-primary'
+        : 'bg-secondary text-secondary-foreground border-border hover:bg-accent hover:border-accent';
+    },
+    init() {
+      window.addEventListener('set-filter', (e) => {
+        const { type, value } = e.detail;
+        if (type === 'event') {
+          this.selectedEvent = value;
+          this.selectedYear = '';
+          this.selectedTags = [];
+          this.selectedLengthRange = '';
+          this.searchQuery = '';
+        } else if (type === 'tag') {
+          this.selectedTags = [value];
+          // Keep other filters? Usually, clicking a tag on a card should probably reset others for clarity,
+          // but maybe keeping them is fine. Let's reset search at least.
+          this.searchQuery = '';
+        }
+        this.filterTalks();
+        // Optional: Open filters if they are closed to show what happened
+        this.showFilters = true;
+
+        // Smooth scroll to top of list
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     }
   }`}
-  class="mb-8"
+  class="mb-12"
 >
-  <!-- Filter Toggle Button -->
-  <div class="flex items-center justify-between mb-4">
-    <button
-      @click="showFilters = !showFilters"
-      class="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition backdrop-blur-sm"
-    >
-      <span>🔍 Filters</span>
-      <span 
-        x-show="activeFilterCount > 0" 
-        x-text="'(' + activeFilterCount + ')'"
-        class="bg-purple-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
-      </span>
-      <span x-show="showFilters">▼</span>
-      <span x-show="!showFilters">▶</span>
-    </button>
-    
-    <div class="text-white text-sm" x-show="filteredTalks.length !== talks.length">
-      Showing <span x-text="filteredTalks.length" class="font-bold"></span> of <span x-text="talks.length" class="font-bold"></span> talks
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+    <div class="flex items-center gap-4">
+      <button
+        @click="showFilters = !showFilters"
+        class="flex items-center gap-2 px-6 py-2.5 bg-card border border-border hover:border-primary/50 text-foreground rounded-full transition shadow-sm"
+      >
+        <span class="text-sm font-semibold">🔍 Filters</span>
+        <span
+          x-show="activeFilterCount > 0"
+          x-text="activeFilterCount"
+          class="bg-primary text-primary-foreground w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold">
+        </span>
+        <span class="text-xs text-muted-foreground ml-1" x-text="showFilters ? '▲' : '▼'"></span>
+      </button>
+
+      <button
+        @click="clearFilters()"
+        x-show="activeFilterCount > 0"
+        class="text-xs font-bold text-primary hover:underline transition"
+      >
+        Reset Filters
+      </button>
+    </div>
+
+    <div class="text-muted-foreground text-sm font-medium" x-show="filteredTalks.length !== talks.length">
+      Showing <span x-text="filteredTalks.length" class="text-foreground font-bold"></span> of <span x-text="talks.length" class="font-bold"></span> talks
     </div>
   </div>
 
-  <!-- Filter Panel -->
-  <div 
+  <div
     x-show="showFilters"
-    x-transition
-    class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 space-y-4"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 -translate-y-4"
+    x-transition:enter-end="opacity-100 translate-y-0"
+    class="bg-card border border-border rounded-3xl p-8 mb-8 shadow-2xl space-y-8"
   >
-    <!-- Search -->
-    <div>
-      <label class="block text-white font-semibold mb-2">Search by Title</label>
-      <input
-        type="text"
-        x-model="searchQuery"
-        @input="filterTalks()"
-        placeholder="Search talks..."
-        class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400"
-      />
-    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <label class="block text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Search</label>
+        <div class="relative">
+          <input
+            type="text"
+            x-model="searchQuery"
+            @input="filterTalks()"
+            placeholder="Type talk title..."
+            class="w-full h-12 px-5 rounded-2xl bg-secondary border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+          />
+        </div>
+      </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- Year Filter -->
       <div>
-        <label class="block text-white font-semibold mb-2">Year</label>
+        <label class="block text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Sort by Year</label>
         <select
           x-model="selectedYear"
           @change="filterTalks()"
-          class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+          class="w-full h-12 px-4 rounded-2xl bg-secondary border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition appearance-none"
         >
-          <option value="">All Years</option>
+          <option value="">All Time</option>
           <template x-for="year in years" :key="year">
             <option :value="year" x-text="year"></option>
           </template>
         </select>
       </div>
+    </div>
 
-      <!-- Event Filter -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <div>
-        <label class="block text-white font-semibold mb-2">Event</label>
+        <label class="block text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Event</label>
         <select
           x-model="selectedEvent"
           @change="filterTalks()"
-          class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+          class="w-full h-12 px-4 rounded-2xl bg-secondary border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition appearance-none"
         >
-          <option value="">All Events</option>
+          <option value="">Select Event</option>
           <template x-for="event in events" :key="event">
             <option :value="event" x-text="event"></option>
           </template>
         </select>
       </div>
+
+      <div>
+        <label class="block text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Duration</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <template x-for="range in ['short', 'medium', 'long', 'very-long']" :key="range">
+            <button
+              @click="selectedLengthRange = (selectedLengthRange === range ? '' : range); filterTalks()"
+              :class="selectedLengthRange === range ? 'bg-primary text-primary-foreground border-primary' : 'bg-secondary text-muted-foreground border-border'"
+              class="h-10 text-[10px] font-bold uppercase tracking-tight rounded-xl border transition-all"
+              x-text="range.replace('-', ' ')"
+            ></button>
+          </template>
+        </div>
+      </div>
     </div>
 
-    <!-- Video Length Filter -->
     <div>
-      <label class="block text-white font-semibold mb-2">Video Length</label>
-      <select
-        x-model="selectedLengthRange"
-        @change="filterTalks()"
-        class="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
-      >
-        <option value="">All Lengths</option>
-        <option value="short">Short (&lt; 15 min)</option>
-        <option value="medium">Medium (15-30 min)</option>
-        <option value="long">Long (30-60 min)</option>
-        <option value="very-long">Very Long (60+ min)</option>
-      </select>
-    </div>
-
-    <!-- Tags Filter -->
-    <div>
-      <label class="block text-white font-semibold mb-2">Tags</label>
+      <label class="block text-sm font-bold text-foreground mb-4 uppercase tracking-wider">Popular Tags</label>
       <div class="flex flex-wrap gap-2">
         <template x-for="tag in tags" :key="tag">
           <button
             @click="toggleTag(tag)"
             x-bind:class="getTagClass(tag)"
-            class="px-3 py-1 rounded-full border text-sm font-medium transition"
+            class="px-4 py-1.5 rounded-full border text-xs font-semibold transition-all active:scale-95"
             x-text="tag"
           ></button>
         </template>
       </div>
     </div>
-
-    <!-- Clear Filters Button -->
-    <div class="pt-2">
-      <button
-        @click="clearFilters()"
-        x-show="activeFilterCount > 0"
-        class="px-4 py-2 bg-red-600/80 hover:bg-red-600 text-white rounded-lg font-semibold transition"
-      >
-        Clear All Filters
-      </button>
-    </div>
   </div>
 </div>
+

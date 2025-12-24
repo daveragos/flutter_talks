@@ -1,37 +1,81 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Contribute - Flutter Talks Collection">
-  <div class="max-w-3xl mx-auto space-y-8">
-    <div class="text-center py-8">
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 drop-shadow">Contribute a Talk</h1>
-      <p class="text-lg md:text-xl text-blue-100 mb-6">
-        Share your favorite Flutter talks with the community
+
+  <div class="max-w-4xl mx-auto space-y-12">
+    <div class="text-center py-16">
+      <h1 class="text-5xl md:text-6xl font-black text-foreground mb-6 tracking-tight">Contribute a Talk</h1>
+      <p class="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+        Help us build the most comprehensive archive of Flutter knowledge by sharing your favorite sessions.
       </p>
-      <button 
+      <button
         onclick="window.dispatchEvent(new CustomEvent('open-modal'))"
-        class="inline-block px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-full shadow-lg hover:from-purple-700 hover:to-blue-700 transition text-lg"
+        class="inline-flex h-14 items-center justify-center rounded-full bg-primary px-10 text-base font-bold text-primary-foreground shadow-xl shadow-primary/20 transition-transform hover:scale-105 active:scale-95"
       >
         🚀 Submit Your Talk
       </button>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-lg p-8 space-y-6">
-      <section>
-        <h2 class="text-2xl font-semibold text-gray-900 mb-4">How to Submit</h2>
-        <ol class="list-decimal list-inside space-y-3 text-gray-600">
-          <li>Fork this repository</li>
-          <li>Create a new markdown file in <code class="bg-gray-100 px-2 py-1 rounded text-sm">src/content/talks/</code></li>
-          <li>Add the talk thumbnail to <code class="bg-gray-100 px-2 py-1 rounded text-sm">public/images/talks/</code></li>
-          <li>Submit a Pull Request with your changes</li>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section class="bg-card border border-border rounded-3xl p-8 space-y-6">
+        <h2 class="text-2xl font-black tracking-tight text-foreground flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">01</span>
+          How to Submit
+        </h2>
+        <ol class="space-y-4">
+          <li class="flex gap-4 items-start">
+            <span class="text-primary mt-1">•</span>
+            <span class="text-muted-foreground text-sm">Fork the <a href="https://github.com/daveragos/flutter_talks" class="text-primary hover:underline font-medium">repository</a> on GitHub</span>
+          </li>
+          <li class="flex gap-4 items-start">
+            <span class="text-primary mt-1">•</span>
+            <span class="text-muted-foreground text-sm">Create a markdown file in <code class="bg-secondary px-2 py-0.5 rounded text-[10px] font-mono border border-border">src/content/talks/</code></span>
+          </li>
+          <li class="flex gap-4 items-start">
+            <span class="text-primary mt-1">•</span>
+            <span class="text-muted-foreground text-sm">Add the thumbnail to <code class="bg-secondary px-2 py-0.5 rounded text-[10px] font-mono border border-border">public/images/talks/</code></span>
+          </li>
+          <li class="flex gap-4 items-start">
+            <span class="text-primary mt-1">•</span>
+            <span class="text-muted-foreground text-sm">Submit a Pull Request for review</span>
+          </li>
         </ol>
       </section>
 
-      <section>
-        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Talk Entry Template</h2>
-        <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto text-gray-600 text-sm"><code>---
+      <section class="bg-card border border-border rounded-3xl p-8 space-y-6">
+        <h2 class="text-2xl font-black tracking-tight text-foreground flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">02</span>
+          Requirements
+        </h2>
+        <ul class="space-y-4">
+          <li class="flex gap-4 items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-primary mt-0.5"><path d="M20 6 9 17l-5-5"/></svg>
+            <span class="text-muted-foreground text-sm">Clear and descriptive talk title</span>
+          </li>
+          <li class="flex gap-4 items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-primary mt-0.5"><path d="M20 6 9 17l-5-5"/></svg>
+            <span class="text-muted-foreground text-sm">High-quality YouTube thumbnail (16:9)</span>
+          </li>
+          <li class="flex gap-4 items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-primary mt-0.5"><path d="M20 6 9 17l-5-5"/></svg>
+            <span class="text-muted-foreground text-sm">Valid event name and hosting year</span>
+          </li>
+          <li class="flex gap-4 items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-primary mt-0.5"><path d="M20 6 9 17l-5-5"/></svg>
+            <span class="text-muted-foreground text-sm">2-5 relevant tags for categorization</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="md:col-span-2 bg-secondary/50 border border-border rounded-3xl p-8 space-y-6">
+        <h2 class="text-2xl font-black tracking-tight text-foreground">Entry Template</h2>
+        <div class="relative group">
+          <pre class="bg-card border border-border p-6 rounded-2xl overflow-x-auto text-muted-foreground text-xs leading-relaxed font-mono"><code>---
 title: "Your Talk Title"
 event: "Event Name (e.g., FlutterCon USA 2024)"
 date: "YYYY-MM-DD"
@@ -42,30 +86,13 @@ videoUrl: "https://youtube.com/watch?v=..."
 ---
 
 Brief description of the talk (2-3 sentences)</code></pre>
-      </section>
-
-      <section>
-        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Requirements</h2>
-        <ul class="list-disc list-inside space-y-2 text-gray-600">
-          <li>Clear and descriptive title</li>
-          <li>Event name and date</li>
-          <li>Relevant tags (2-5 tags recommended)</li>
-          <li>High-quality thumbnail image</li>
-          <li>Valid video URL</li>
-          <li>Brief description of the talk</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Tips for Great Submissions</h2>
-        <ul class="list-disc list-inside space-y-2 text-gray-600">
-          <li>Use clear, descriptive titles</li>
-          <li>Include relevant tags for better discoverability</li>
-          <li>Provide a concise but informative description</li>
-          <li>Ensure the video is publicly accessible</li>
-          <li>Use high-quality thumbnail images</li>
-        </ul>
+          <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button class="p-2 rounded-lg bg-secondary border border-border text-foreground hover:bg-accent transition" onclick="navigator.clipboard.writeText(this.parentElement.previousElementSibling.innerText)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            </button>
+          </div>
+        </div>
       </section>
     </div>
   </div>
-</Layout> 
+</Layout>

@@ -1,8 +1,8 @@
 ---
 title: "Micro-Apps || Micro Front-Ends | Vilson Blanco Dauinheimer - FlutterVikings"
-event: "Vilson Blanco Dauinheimer - FlutterVikings"
-date: "2025-12-12"
-year: "2025"
+event: "Flutter Vikings"
+date: "2022-02-02"
+year: "2022"
 tags: ["flutter", "ui"]
 thumbnail: "https://i.ytimg.com/vi/SyoAySYn_No/maxresdefault.jpg"
 videoUrl: "https://www.youtube.com/watch?v=SyoAySYn_No"

@@ -21,32 +21,78 @@ const talks = allTalks
 // Serialize talks for client-side use
 const talksJson = JSON.stringify(talks);
 const baseUrlJson = JSON.stringify(baseUrl);
+
+// Christmas Detection Logic
+const now = new Date();
+const isChristmas = now.getMonth() === 11 || (now.getMonth() === 0 && now.getDate() <= 15);
+const isChristmasJson = JSON.stringify(isChristmas);
 ---
 
+
 <Layout title="Flutter Talks Collection">
-  <div class="space-y-8">
-    <div class="text-center py-10">
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2 drop-shadow">Flutter Talks Collection ✨</h1>
-      <p class="text-lg md:text-xl text-blue-100 mb-6">Discover, share, and explore Flutter talks from conferences and events around the world.</p>
+  <div class="space-y-12">
+    <div class="text-center py-16 relative">
+      <div class="absolute inset-0 bg-primary/5 blur-[100px] -z-10 rounded-full"></div>
+      <h1 class="text-5xl md:text-7xl font-black text-foreground mb-6 tracking-tight">
+        Flutter <span class="text-primary italic">Talks</span> Collection
+      </h1>
+      <p class="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+        Discover, share, and explore Flutter talks from conferences and events around the world.
+      </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <button 
+        <button
           onclick="window.dispatchEvent(new CustomEvent('open-modal'))"
-          class="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-full shadow-lg hover:from-purple-700 hover:to-blue-700 transition"
+          class="inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-sm font-bold text-primary-foreground shadow transition-transform hover:scale-105 active:scale-95"
         >
           🚀 Submit a Talk
         </button>
-        <a href={`${baseUrl}contribute/`} class="inline-block px-6 py-3 bg-white text-purple-800 font-bold rounded-full shadow hover:bg-blue-100 transition">Learn How to Contribute</a>
+        <a
+          href={`${baseUrl}contribute/`}
+          class="inline-flex h-12 items-center justify-center rounded-full border border-border bg-background px-8 text-sm font-bold text-foreground shadow-sm transition-transform hover:scale-105 active:scale-95"
+        >
+          Learn How to Contribute
+        </a>
       </div>
     </div>
 
     <TalkFilter talks={talks} />
 
-    <div 
+    <div
       x-data={`{
         talks: ${talksJson},
         filteredTalks: ${talksJson},
         baseUrl: ${baseUrlJson},
+        isChristmas: ${isChristmasJson},
+        currentPage: 1,
+        itemsPerPage: 30,
+        get paginatedTalks() {
+
+          const start = (this.currentPage - 1) * this.itemsPerPage;
+          const end = start + this.itemsPerPage;
+          return this.filteredTalks.slice(start, end);
+        },
+        get totalPages() {
+          return Math.ceil(this.filteredTalks.length / this.itemsPerPage);
+        },
+        get pagesToShow() {
+          const range = 1;
+          const pages = [];
+          for (let i = 1; i <= this.totalPages; i++) {
+            if (i === 1 || i === this.totalPages || (i >= this.currentPage - range && i <= this.currentPage + range)) {
+              pages.push(i);
+            }
+          }
+          const result = [];
+          let prev = null;
+          for (const page of pages) {
+            if (prev && page - prev > 1) result.push('...');
+            result.push(page);
+            prev = page;
+          }
+          return result;
+        },
         formatDate(dateString) {
+
           const date = new Date(dateString);
           return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
         },
@@ -63,49 +109,105 @@ const baseUrlJson = JSON.stringify(baseUrl);
           return thumbnail || this.baseUrl + 'images/flutter-talks-logo.png';
         },
         init() {
-          // Listen for filter updates
           window.addEventListener('talks-filtered', (e) => {
             this.filteredTalks = e.detail.talks;
+            this.currentPage = 1;
           });
         }
       }`}
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      class="space-y-12"
     >
-      <template x-for="talk in filteredTalks" :key="talk.slug">
-        <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-transform duration-200">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <template x-for="talk in paginatedTalks" :key="talk.slug">
+
+        <article class="group bg-card border border-border/50 rounded-2xl overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,181,248,0.1)]">
           <a :href="talk.videoUrl" target="_blank" rel="noopener noreferrer" class="block">
-            <img
-              :src="getThumbnail(talk.thumbnail)"
-              :alt="talk.title"
-              class="w-full aspect-video object-cover bg-gray-200"
-              :onerror="'this.onerror=null; this.src=\'' + baseUrl + 'images/flutter-talks-logo.png\';'"
-            />
-            <div class="p-4">
-              <h2 class="text-lg font-bold text-purple-900 mb-1" x-text="talk.title"></h2>
-              <p class="text-xs text-blue-700 mb-1" x-text="talk.event"></p>
-              <div class="flex items-center gap-2 mb-2">
-                <p class="text-xs text-gray-500" x-text="formatDate(talk.date)"></p>
-                <span x-show="talk.videoLength" class="text-xs text-gray-400">•</span>
-                <p x-show="talk.videoLength" class="text-xs text-gray-500" x-text="formatVideoLength(talk.videoLength)"></p>
+            <div class="relative aspect-video overflow-hidden">
+              <img
+                :src="getThumbnail(talk.thumbnail)"
+                :alt="talk.title"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                :onerror="'this.onerror=null; this.src=\'' + baseUrl + 'images/flutter-talks-logo.png\';'"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded cursor-pointer hover:bg-primary/20 transition-colors"
+                  x-text="talk.event"
+                  @click.prevent.stop="window.dispatchEvent(new CustomEvent('set-filter', { detail: { type: 'event', value: talk.event } }))"
+                ></span>
               </div>
-              <div class="flex flex-wrap gap-2">
+              <h2 class="text-xl font-bold text-foreground mb-4 line-clamp-2 group-hover:text-primary transition-colors" x-text="talk.title"></h2>
+              <div class="flex items-center justify-between mt-auto">
+                <div class="flex items-center gap-2">
+                  <span x-show="isChristmas" class="text-[10px] animate-pulse">❄️</span>
+                  <span class="text-xs text-muted-foreground" x-text="formatDate(talk.date)"></span>
+                  <span x-show="talk.videoLength" class="text-xs text-muted-foreground/30">•</span>
+                  <span x-show="talk.videoLength" class="text-xs text-muted-foreground" x-text="formatVideoLength(talk.videoLength)"></span>
+                </div>
+
+              </div>
+              <div class="flex flex-wrap gap-2 mt-4">
                 <template x-for="tag in talk.tags" :key="tag">
-                  <span class="px-2 py-0.5 bg-purple-700 text-white text-xs rounded-full font-semibold" x-text="tag"></span>
+                  <span
+                    class="px-2 py-0.5 border border-border text-[10px] font-medium text-muted-foreground rounded-full transition-colors hover:border-primary hover:text-primary cursor-pointer"
+                    x-text="tag"
+                    @click.prevent.stop="window.dispatchEvent(new CustomEvent('set-filter', { detail: { type: 'tag', value: tag } }))"
+                  ></span>
                 </template>
               </div>
             </div>
+
           </a>
         </article>
       </template>
-      
+
       <!-- Empty State -->
-      <div 
+      <div
         x-show="filteredTalks.length === 0"
-        class="col-span-full text-center py-12"
+        class="col-span-full text-center py-20 border-2 border-dashed border-border rounded-3xl"
       >
-        <p class="text-white text-xl mb-2">No talks found</p>
-        <p class="text-blue-200">Try adjusting your filters</p>
+        <p class="text-foreground text-2xl font-bold mb-2">No talks found</p>
+        <p class="text-muted-foreground">Try adjusting your filters to find what you're looking for.</p>
+      </div>
+      </div>
+
+      <!-- Pagination UI -->
+      <div x-show="totalPages > 1" class="flex justify-center items-center gap-4 mt-12 py-8 border-t border-border/50">
+        <button
+          @click="currentPage--; window.scrollTo({ top: 0, behavior: 'smooth' })"
+          :disabled="currentPage === 1"
+          class="px-6 py-2 rounded-full border border-border bg-card text-foreground disabled:opacity-30 disabled:cursor-not-allowed hover:border-primary transition font-bold text-sm"
+        >
+          Previous
+        </button>
+        <div class="flex items-center gap-2">
+          <template x-for="(p, index) in pagesToShow" :key="p === '...' ? 'dot-' + index : p">
+            <div class="flex items-center">
+              <template x-if="p === '...'">
+                <span class="px-2 text-muted-foreground font-bold">...</span>
+              </template>
+              <template x-if="p !== '...'">
+                <button
+                  @click="currentPage = p; window.scrollTo({ top: 0, behavior: 'smooth' })"
+                  :class="currentPage === p ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20' : 'bg-card text-muted-foreground border-border hover:border-primary border hover:text-foreground'"
+                  class="w-10 h-10 rounded-full border flex items-center justify-center text-sm font-bold transition-all active:scale-90"
+                  x-text="p"
+                ></button>
+              </template>
+            </div>
+          </template>
+        </div>
+        <button
+          @click="currentPage++; window.scrollTo({ top: 0, behavior: 'smooth' })"
+          :disabled="currentPage === totalPages"
+          class="px-6 py-2 rounded-full border border-border bg-card text-foreground disabled:opacity-30 disabled:cursor-not-allowed hover:border-primary transition font-bold text-sm"
+        >
+          Next
+        </button>
       </div>
     </div>
-  </div>
 </Layout>
+
